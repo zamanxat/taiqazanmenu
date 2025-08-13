@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="kz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>«TaiQazan» шайхана</title>
+<link rel="stylesheet" href="style.css">
+<link rel="shortcut icon" href="images/logo.jpeg" type="image/x-icon">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+<meta name="google-site-verification" content="FvlHWrvQ3hTeJFf6KKCrFLzTjBAOYlu9ixHQmFeb3Gk" />
+<title>Меню - TaiQazan шәйхана</title>
+<meta name="description" content="TaiQazan — Сарыағаш қаласындағы шәйхана-кафе. Бифштекс 1600₸, Манты 1700₸, Лаваш говяжий 1300₸. Ұлттық және заманауи тағамдар тиімді бағамен. Жеткізу қызметі бар.">
+
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #F6F6FC;
+    margin: 0;
+    padding: 10px;
+  }
+  h2 {font-size: 22px; font-weight: bold; margin: 15px 0;}
+
+  /* --- CATEGORY SCROLL --- */
+  .scroll-gallery {
+    display: flex;
+    overflow-x: auto;
+    gap: 15px;
+    padding: 10px 0;
+  }
+  .scroll-item {
+    flex: 0 0 auto;
+    text-align: center;
+    cursor: pointer;
+  }
+  .circle {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 3px solid rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 5px;
+    position: relative;
+    box-sizing: border-box;
+  }
+  .scroll-item.active .circle {
+    border-color: black;
+  }
+  .circle img {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .scroll-item p {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  .scroll-gallery::-webkit-scrollbar { display: none; }
+
+  /* --- MENU GRID --- */
+  .menu-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+  }
+  .product-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease;
+    padding-bottom: 10px;
+    cursor: pointer;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease-out forwards;
+  }
+  .product-card:hover { transform: translateY(-3px); }
+  .product-image img {
+    width: 100%; height: 140px;
+    object-fit: cover;
+    border-bottom: 1px solid #eee;
+  }
+  .product-info { padding: 10px; }
+  .product-info h3 { font-size: 15px; font-weight: bold; margin: 0 0 5px; }
+  .price { font-size: 15px; font-weight: bold; background: #e0e0e055; padding: 5px 10px; border-radius: 4px; display: inline-block; text-align: center; width: 50%;}
+  .options {
+    display: flex; gap: 5px;
+    padding: 0 10px;
+    flex-wrap: wrap;
+  }
+  .options label {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    text-align: center;
+    padding: 4px 0;
+    cursor: pointer;
+    font-size: 13px;
+    background: #fff;
+    transition: background 0.2s ease;
+    min-width: 50px;
+  }
+  .options input[type="radio"] { display: none; }
+  .options input[type="radio"]:checked + label {
+    background: #fff;
+    border-color: #000;
+    font-weight: bold;
+  }
+
+  @media (max-width: 1024px) and (min-width: 481px) {
+    .menu-container { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .menu-container { grid-template-columns: repeat(2, 1fr);}
+    .product-image img { height: 120px; }
+    .product-info h3 { font-size: 14px; }
+    .price { font-size: 14px; }
+  }
+
+  @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* --- POPUP --- */
+  .popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  z-index: 999;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease forwards;
+  max-height: 90%;
+  overflow-y: auto;
+  margin: auto;
+  box-sizing: border-box;
+}
+
+  .top-bar {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px;
+  }
+  .back-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .popup-body {
+    display: flex;
+    flex-direction: column;
+  }
+  .popup-body img {
+    width: 100%;
+    height: auto;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-radius: 30px;
+  }
+  .popup-details { padding: 15px; }
+  .popup-details h2 { margin: 10px 0; }
+  .popup-price { font-weight: bold; font-size: 18px; color: #000; margin-bottom: 10px; }
+
+  /* @media (min-width: 768px) {
+    .popup-body {
+      flex-direction: row;
+    }
+    .popup-body img {
+      width: 50%;
+      height: auto;
+      border-radius: 20px 0 0 20px;
+    }
+    .popup-details {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+  } */
+
+ @media (max-width: 768px) {
+  .popup-content {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+  }
+}
+
+  @keyframes slideIn {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .category-title {
+  width: 100%;
+  text-align: left;
+  font-size: 1.7em;
+  font-weight: bold;
+  margin: 50px 0 10px;
+  padding-left: 5px;
+  color: #333;
+  font-family: "kzmoumenta", sans-serif;
+  grid-column: 1/3;
+}
+
+@media (min-width:480px) {
+    .category-title {
+        grid-column: 1/4;
+    }
+}
+
+@media (min-width:1000px) {
+    .category-title {
+        grid-column: 1/5;
+    }
+}
+
+
+.header {
+      position: relative;
+      height: 100vh;
+      background: url('a61c6024-4302-4616-9933-d1a7289f0c8e.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+    }
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-size: 24px;
+      color: green;
+      font-weight: bold;
+    }
+    .menu-btn {
+      background: green;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .menu-btn:hover {
+      background: darkgreen;
+    }
+    /* Карточкалар */
+    .cards {
+      padding: 50px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      overflow: hidden;
+      text-align: center;
+      padding: 20px;
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid #ddd;
+    }
+    .card h3 {
+      margin: 15px 0;
+      color: green;
+    }
+
+    .footer {
+  background: #fff;
+  padding: 20px;
+  margin-left: -10px;
+  margin-right: -10px;
+  margin-top: 50px;
+  border-top-left-radius: 30px;
+  border-top-right-radius: 30px;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+  padding-bottom: 100px;
+}
+
+.footer-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-logo img {
+  height: 50px;
+  border-radius: 5px;
+  width: 60px;
+  height: 60px;
+    margin-bottom: 10px;
+}
+
+.footer-logo h2 {
+    margin-top: -5px;
+}
+
+.footer-socials a img {
+  width: 35px;
+  margin: 0 10px;
+  background: #f8f8f8;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.footer-socials a:hover img {
+  background: #e5e5e5;
+}
+
+.footer hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.footer-bottom .developer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-bottom .developer img {
+  height: 50px;
+
+}
+
+@media (min-width: 600px) {
+  .footer-top {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .footer-bottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+
+/* Ортақ стиль */
+.floating-btn {
+  position: fixed;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 50px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+/* Сол жақтағы жоғары түймесі */
+.floating-btn.left {
+  left: 20px;
+  background: #3b3b3ba2;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  justify-content: center;
+  border: none;
+}
+
+/* Оң жақтағы WhatsApp */
+.floating-btn.right {
+  right: 20px;
+  background: #3b3b3ba2;
+}
+
+/* WhatsApp суреті */
+.floating-btn.right img {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  margin-right: 3px;
+  z-index: inherit;
+}
+
+/* Пульс эффект */
+.floating-btn.right::before {
+  content: '';
+  position: absolute;
+  right: -2px;
+  width: 55px;
+  height: 55px;
+  background: #006301;
+  border-radius: 50%;
+  animation: pulse 4s infinite ease-out;
+  z-index: -1;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1.5;
+  }
+
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Актив кезде */
+.floating-btn.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+.navi img {
+    width: 50px;
+    border-radius: 5px;
+    margin-left: 15px;
+}
+    
+.navi {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 70px;
+    align-items: center;
+    background-color: #ffffff;
+    margin-bottom: 0px;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    box-shadow: 0px 0px 3px 0px rgb(223, 223, 223) ;
+    border-radius: 10px;
+}
+
+.head {
+  display: flex;
+  justify-content: center;
+}
+
+.navi {
+    
+}
+
+
+
+
+</style>
+</head>
+
+  
+       
+
+<body>
+
+     <div class="head">
+          <div class="navi">
+              <img src="images/logo.jpeg" alt="">
+              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: #f1f1f1; border-radius: 50px; padding: 5px; padding-left: 10px; padding-right: 10px; display: flex; align-items: center; justify-content: space-between; font-size: 1em; margin-right: 10px;">
+                <ion-icon size="small" name="ios-globe" style="margin-right: 4px;"></ion-icon>
+                kz
+              </a>
+              <ul class="dropdown-menu" style="padding-left: 10px; margin-right: 50px;">
+                  <li><a class="dropdown-item" href="/" style="font-weight: bold; background-color: #f1f1f1; border-radius: 30px; width: 80%;">🇰🇿 Қазақша</a></li>
+                  <li><a class="dropdown-item" href="ru.html">🇷🇺 Орысша</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <!-- <li><a class="dropdown-item" href="#"></a></li> -->
+              </ul>
+          </div>
+        </div>
+    
+
+
+
+
+<header>
+
+<div id="carouselExampleDark" class="carousel carousel-fade slide" style="margin-bottom: 30px;" >
+ 
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="10000">
+      <img src="images/head-1.jpg" class="d-block w-100" alt="..." style="border-radius: 10px;">
+      <!-- <div class="carousel-caption d-none d-md-block">
+        <h5>First slide label</h5>
+        <p>Some representative placeholder content for the first slide.</p>
+      </div> -->
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="images/head-2.jpg" class="d-block w-100" alt="..." style="border-radius: 10px;">
+      <!-- <div class="carousel-caption d-none d-md-block">
+        <h5>Second slide label</h5>
+        <p>Some representative placeholder content for the second slide.</p>
+      </div> -->
+    </div>
+    <div class="carousel-item">
+      <img src="images/head-3.jpg" class="d-block w-100" alt="..." style="border-radius: 10px;">
+      <!-- <div class="carousel-caption d-none d-md-block">
+        <h5>Third slide label</h5>
+        <p>Some representative placeholder content for the third slide.</p>
+      </div> -->
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
+
+</header>
+<!-- <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Link
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul> -->
+          
+        
+
+
+<!-- CATEGORY SCROLL -->
+<div class="scroll-gallery">
+  <div class="scroll-item active" onclick="showCategory('nan', this)">
+    <div class="circle"><img src="images/nan onimi.jpg" alt=""></div><p>Нан <br>өнімдері</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('salat', this)">
+    <div class="circle"><img src="images/salaty.jpg" alt=""></div><p>Салаттар</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('uigyr', this)">
+    <div class="circle"><img src="images2/uigyr.jpg" alt=""></div><p>Ұйғыр <br>асханасы</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('evropa', this)">
+    <div class="circle"><img src="images/europa.jpg" alt=""></div><p>Европа <br>тағамдары</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('bir', this)">
+    <div class="circle"><img src="images/bir.jpeg" alt=""></div><p>Бірінші <br>тағамдар</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('eki', this)">
+    <div class="circle"><img src="images/eki.jpg" alt=""></div><p>Екінші <br>тағамдар</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('sashlyk', this)">
+    <div class="circle"><img src="images3/sasliki.jpg" alt=""></div><p>Шашлыктар</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('pizza', this)">
+    <div class="circle"><img src="images4/pizzy.jpeg" alt=""></div><p>Пицца</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('fast', this)">
+    <div class="circle"><img src="images2/fastfood.webp" alt=""></div><p>Fast Food</p>
+  </div>
+  <div class="scroll-item" onclick="showCategory('desert', this)">
+    <div class="circle"><img src="images4/deserty.jpeg" alt=""></div><p>Десерттер</p>
+  </div>
+   <div class="scroll-item" onclick="showCategory('limon', this)">
+    <div class="circle"><img src="images4/limonady.jpeg" alt=""></div><p>Лимонадтар</p>
+  </div>
+   <div class="scroll-item" onclick="showCategory('sok', this)">
+    <div class="circle"><img src="images/napitki.jpg" alt=""></div><p>Напитоктар</p>
+  </div>
+   <div class="scroll-item" onclick="showCategory('bar', this)">
+    <div class="circle"><img src="images/bar.jpg" alt=""></div><p>Бар</p>
+  </div>
+   <div class="scroll-item" onclick="showCategory('kazak', this)">
+    <div class="circle"><img src="images4/kazak.jpg" alt=""></div><p>Қазақ <br>сусындары</p>
+  </div>
+</div>
+
+
+<!-- MENU -->
+<div class="menu-container">
+  <h2 class="category-title nan-title">Нан өнімдері</h2>
+  <h2 class="category-title salat-title" style="display:none;">Салаттар</h2>
+  <h2 class="category-title uigyr-title" style="display:none;">Ұйғыр асханасы</h2>
+  <h2 class="category-title evropa-title" style="display:none;">Европа тағамдары</h2>
+  <h2 class="category-title bir-title" style="display:none;">Бірінші тағамдар</h2>
+  <h2 class="category-title eki-title" style="display:none;">Екінші тағамдар</h2>
+  <h2 class="category-title sashlyk-title" style="display:none;">Шашлыктар</h2>
+  <h2 class="category-title pizza-title" style="display:none;">Пицца</h2>
+  <h2 class="category-title fast-title" style="display:none;">Fast Food</h2>
+  <h2 class="category-title desert-title" style="display:none;">Десерттер</h2>
+  <h2 class="category-title limon-title" style="display:none;">Лимонадтар</h2>
+  <h2 class="category-title sok-title" style="display:none;">Напитоктар</h2>
+  <h2 class="category-title bar-title" style="display:none;">Бар</h2>
+  <h2 class="category-title kazak-title" style="display:none;">Қазақ сусындары</h2>
+
+
+
+  <!-- data-ingredients="Ұн, қант" -->
+
+
+
+
+  
+
+  <!-- НАН -->
+  <div class="product-card nan" data-ingredients="Ұн, қант, тұз, ашытқы, сүт, жұмыртқа, май" onclick="openPopup(1)">
+    <div class="product-image"><img src="images4/bauyrsak.jpeg"></div>
+    <div class="product-info"><h3>Бауырсақ</h3><div class="price" id="price1">450 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b1" id="b1a" checked onchange="updatePrice(1, 450)"><label for="b1a">4 дана</label>
+      <input type="radio" name="b1" id="b1b" onchange="updatePrice(1, 850)"><label for="b1b">8 дана</label>
+    </div>
+  </div>
+  <div class="product-card nan" data-ingredients="Ұн, тұз, ашытқы" onclick="openPopup(2)">
+    <div class="product-image"><img src="images/lepeshka.jpeg"></div>
+    <div class="product-info"><h3>Нан</h3><div class="price" id="price2">250 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b2" id="b2a" checked onchange="updatePrice(2, 500)"><label for="b2a">1 дана</label>
+      <input type="radio" name="b2" id="b2b" onchange="updatePrice(2, 2000)"><label for="b2b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card nan" data-ingredients="Ұн, тұз, су" onclick="openPopup(3)">
+    <div class="product-image"><img src="images/kaptama.jpg"></div>
+    <div class="product-info"><h3>Қаптама</h3><div class="price" id="price3">600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="a1" id="aa1" checked onchange="updatePrice(3, 450)"><label for="aa1">4 дана</label>
+      <input type="radio" name="a2" id="aa2" onchange="updatePrice(3, 850)"><label for="aa2">8 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card nan" data-ingredients="Ұн, ет, пияз, тұз, май" onclick="openPopup(4)">
+    <div class="product-image"><img src="images4/samsa.jpeg"></div>
+    <div class="product-info"><h3>Самса</h3><div class="price" id="price4">550 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b1" id="b1a" checked onchange="updatePrice(4, 450)"><label for="b1a">4 дана</label>
+      <input type="radio" name="b1" id="b1b" onchange="updatePrice(4, 850)"><label for="b1b">8 дана</label>
+    </div> -->
+  </div>
+  
+  
+
+  <!-- Салаттар -->
+  <div class="product-card salat" style="display:none" data-ingredients="Қияр, қызанақ, аскөк, тұз" onclick="openPopup(5)">
+    <div class="product-image"><img src="images/taisalat.jpg"></div>
+    <div class="product-info"><h3>Тай Казан <br>Фирменный</h3><div class="price" id="price5">2 200 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(5, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(5, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Тауық еті, салат жапырағы, пармезан ірімшігі, крутон" onclick="openPopup(6)">
+    <div class="product-image"><img src="images/chezar.webp"></div>
+    <div class="product-info"><h3>Цезарь</h3><div class="price" id="price6">1 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b4" id="b4a" checked onchange="updatePrice(6, 1310)"><label for="b4a">1 дана</label>
+      <input type="radio" name="b4" id="b4b" onchange="updatePrice(6, 3500)"><label for="b4b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Қияр, қызанақ, болгар бұрышы, пияз, зәйтүн, фета ірімшігі" onclick="openPopup(7)">
+    <div class="product-image"><img src="images/grecheski.jpg"></div>
+    <div class="product-info"><h3>Греческий</h3><div class="price" id="price7">1 350 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(7, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(7, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Тауық еті, жұмыртқа, қияр, жүгері, майонез" onclick="openPopup(8)">
+    <div class="product-image"><img src="images/nejny.jpg"></div>
+    <div class="product-info"><h3>Нежный</h3><div class="price" id="price8">1 400 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(8, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(8, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Тауық еті, қияр, қызанақ, жұмсақ ірімшік, гренки, майонез, тұз" onclick="openPopup(9)">
+    <div class="product-image"><img src="images/malibu.jpg"></div>
+    <div class="product-info"><h3>Малибу</h3><div class="price" id="price9">1 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(9, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(9, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Картоп, сәбіз, жұмыртқа, шұжық, қияр, бұршақ, майонез, тұз" onclick="openPopup(10)">
+    <div class="product-image"><img src="images/olive.jpg"></div>
+    <div class="product-info"><h3>Оливье</h3><div class="price" id="price10">1 300 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(10, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(10, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Қызанақ, пияз, ащы бұрыш, аскөк, тұз" onclick="openPopup(11)">
+    <div class="product-image"><img src="images/achichuk.jpg"></div>
+    <div class="product-info"><h3>Ачи-Чук</h3><div class="price" id="price11">750 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(11, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(11, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Қияр, қызанақ, аскөк, тұз" onclick="openPopup(12)">
+    <div class="product-image"><img src="images/sveji.jpg"></div>
+    <div class="product-info"><h3>Свежий салат</h3><div class="price" id="price12">750 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(12, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(12, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Баклажан, ұн, жұмыртқа, май, тұз" onclick="openPopup(13)">
+    <div class="product-image"><img src="images2/baklajan.jpg"></div>
+    <div class="product-info"><h3>Хрустящие баклажаны</h3><div class="price" id="price13">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(13, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(13, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Қызылша, картоп, сәбіз, қияр, бұршақ, пияз, тұз, май" onclick="openPopup(14)">
+    <div class="product-image"><img src="images/vinegret.jpg"></div>
+    <div class="product-info"><h3>Винегрет</h3><div class="price" id="price14">1 350 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(14, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(14, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Помидор, ірімшік, сухарик, сарымсақ, аскөк, майонез, тұз, бұрыш" onclick="openPopup(15)">
+    <div class="product-image"><img src="images/smak.jpg"></div>
+    <div class="product-info"><h3>Смак</h3><div class="price" id="price15">1 400 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(15, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(15, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card salat" style="display:none" data-ingredients="Сәбіз, ірімшік, жұмыртқа, сарымсақ, майонез, тұз" onclick="openPopup(16)">
+    <div class="product-image"><img src="images3/franchuz.jpg"></div>
+    <div class="product-info"><h3>Французский</h3><div class="price" id="price16">1 450 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b3" id="b3a" checked onchange="updatePrice(16, 1500)"><label for="b3a">1 дана</label>
+      <input type="radio" name="b3" id="b3b" onchange="updatePrice(16, 4000)"><label for="b3b">3 дана</label>
+    </div> -->
+  </div>
+
+  <!-- Ұйғыр асханасы -->
+  <div class="product-card uigyr" style="display:none" data-ingredients="Ұн, ет, пияз, тұз" onclick="openPopup(17)">
+    <div class="product-image"><img src="images/manty.jpg"></div>
+    <div class="product-info"><h3>Манты</h3><div class="price" id="price17">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(17, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(17, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card uigyr" style="display:none" data-ingredients="Ет, ұн, болгар бұрышы, пияз, сәбіз, қызанақ, картоп, ащы бұрыш, тұз" onclick="openPopup(18)">
+    <div class="product-image"><img src="images/guiru.webp"></div>
+    <div class="product-info"><h3>Гуйру лағман</h3><div class="price" id="price18">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(18, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(18, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card uigyr" style="display:none" data-ingredients="Ет, ұн, болгар бұрышы, пияз, сәбіз, қызанақ, ащы бұрыш, тұз" onclick="openPopup(19)">
+    <div class="product-image"><img src="images/kuyrma.jpeg"></div>
+    <div class="product-info"><h3>Қуырма лағман</h3><div class="price" id="price19">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(19, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(19, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card uigyr" style="display:none" data-ingredients="Ет, ұн, пияз, сәбіз, қызанақ, картоп, ащы бұрыш, тұз" onclick="openPopup(20)">
+    <div class="product-image"><img src="images/uilagmany.jpg"></div>
+    <div class="product-info"><h3>Үй лағманы</h3><div class="price" id="price20">1 600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(20, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(20, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card uigyr" style="display:none" data-ingredients="Картоп, ет, пияз, тұз" onclick="openPopup(21)">
+    <div class="product-image"><img src="images/frimiasa.jpeg"></div>
+    <div class="product-info"><h3>Фри с Мясом</h3><div class="price" id="price21">2 600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(21, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(21, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card uigyr" style="display:none" data-ingredients="Ет, картоп, пияз, сәбіз, тұз" onclick="openPopup(22)">
+    <div class="product-image"><img src="images3/jarovnia.jpg"></div>
+    <div class="product-info"><h3>Жаровня с Мясом</h3><div class="price" id="price22">2 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(22, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(22, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+
+
+
+  <!-- Европа тағамдары -->
+  <div class="product-card evropa" style="display:none" data-ingredients="Сиыр еті, тұз, бұрыш" onclick="openPopup(23)">
+    <div class="product-image"><img src="images/bifsteks.webp"></div>
+    <div class="product-info"><h3>Бифштекс</h3><div class="price" id="price23">1 600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(23, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(23, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Жұмыртқа, ет, ұн, тұз" onclick="openPopup(24)">
+    <div class="product-image"><img src="images/brizol.jpg"></div>
+    <div class="product-info"><h3>Бризоль</h3><div class="price" id="price24">1 600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(24, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(24, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Ет, пияз, қызанақ, сәбіз, тұз" onclick="openPopup(25)">
+    <div class="product-image"><img src="images/gulas.jpg"></div>
+    <div class="product-info"><h3>Гуляш</h3><div class="price" id="price25">1 850 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(25, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(25, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Тауық еті, саңырауқұлақ, пияз, тұз" onclick="openPopup(26)">
+    <div class="product-image"><img src="images/kur s grib.jpg"></div>
+    <div class="product-info"><h3>Курица с грибами</h3><div class="price" id="price26">1 900 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(26, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(26, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Ет, саңырауқұлақ, пияз, тұз" onclick="openPopup(27)">
+    <div class="product-image"><img src="images/miasa s grib.webp"></div>
+    <div class="product-info"><h3>Мясо с грибами</h3><div class="price" id="price27">2 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(27, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(27, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Тауық еті, соя соусы, сарымсақ, тұз" onclick="openPopup(28)">
+    <div class="product-image"><img src="images/kuri aziat.jpg"></div>
+    <div class="product-info"><h3>Курица по-азиатски</h3><div class="price" id="price28">1 900 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(28, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(28, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Ет, болгар бұрышы, соя соусы, сарымсақ, тұз" onclick="openPopup(29)">
+    <div class="product-image"><img src="images/miasa tai.jpg"></div>
+    <div class="product-info"><h3>Мясо по-тайски</h3><div class="price" id="price29">2 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(29, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(29, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Жүзім жапырағы, ет, күріш, пияз, тұз" onclick="openPopup(30)">
+    <div class="product-image"><img src="images/dolma.jpeg"></div>
+    <div class="product-info"><h3>Долма</h3><div class="price" id="price30">1 900 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(30, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(30, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Тауық еті, пияз, қызанақ, сарымсақ, тұз" onclick="openPopup(31)">
+    <div class="product-image"><img src="images/chehombili.jpg"></div>
+    <div class="product-info"><h3>Чехомбили</h3><div class="price" id="price31">1 600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(31, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(31, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Тефтели, картоп, сәбіз, пияз, тұз" onclick="openPopup(32)">
+    <div class="product-image"><img src="images/jarkoe tefteli.jpg"></div>
+    <div class="product-info"><h3>Жаркое с тефтелями</h3><div class="price" id="price32">2 100 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(32, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(32, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Ет, картоп, пияз, сәбіз, тұз" onclick="openPopup(33)">
+    <div class="product-image"><img src="images2/jiz.png"></div>
+    <div class="product-info"><h3>Жиз-Биз</h3><div class="price" id="price33">2 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(33, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(33, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card evropa" style="display:none" data-ingredients="Ет, пияз, тұз, бұрыш" onclick="openPopup(34)">
+    <div class="product-image"><img src="images3/lula.jpg"></div>
+    <div class="product-info"><h3>Люля кебаб</h3><div class="price" id="price34">1 950 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(34, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(34, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  
+
+<!-- Бірінші тағамдар -->
+  <div class="product-card bir" style="display:none" data-ingredients="Ет, ұн, пияз, тұз" onclick="openPopup(35)">
+    <div class="product-image"><img src="images/naryn.jpg"></div>
+    <div class="product-info"><h3>Нарын сорпамен</h3><div class="price" id="price35">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(35, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(35, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ет, күріш, пияз, тұз" onclick="openPopup(36)">
+    <div class="product-image"><img src="images4/asip.jpg"></div>
+    <div class="product-info"><h3>Әсіп</h3><div class="price" id="price36">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(36, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(36, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Қырыққабат, ет, күріш, пияз, тұз" onclick="openPopup(37)">
+    <div class="product-image"><img src="images/golubchi.jpg"></div>
+    <div class="product-info"><h3>Голубцы</h3><div class="price" id="price37">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(37, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(37, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ет, пияз, сәбіз, тұз" onclick="openPopup(38)">
+    <div class="product-image"><img src="images/sorpa.jpg"></div>
+    <div class="product-info"><h3>Сорпа</h3><div class="price" id="price38">1 800 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="t4" id="t4a" checked onchange="updatePrice(38, 1800)"><label for="t4a">Қой еті</label>
+      <input type="radio" name="t4" id="t4b" onchange="updatePrice(38, 1700)"><label for="t4b">Сиыр еті</label>
+    </div>
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ұн, ет, пияз, тұз" onclick="openPopup(39)">
+    <div class="product-image"><img src="images3/tuspara.png"></div>
+    <div class="product-info"><h3>Тұшпара</h3><div class="price" id="price39">1 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(39, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(39, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ұн, қияр, қырыққабат, жұмыртқа, пияз, сәбіз, тұз" onclick="openPopup(40)">
+    <div class="product-image"><img src="images/kuksi.jpg"></div>
+    <div class="product-info"><h3>Кукси</h3><div class="price" id="price40">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(40, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(40, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ұн, тауық еті, жұмыртқа, пияз, сәбіз, тұз" onclick="openPopup(41)">
+    <div class="product-image"><img src="images/ramen.jpg"></div>
+    <div class="product-info"><h3>Рамен</h3><div class="price" id="price41">1 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(41, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(41, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ұн, тауық еті, пияз, сәбіз, тұз" onclick="openPopup(42)">
+    <div class="product-image"><img src="images/kespe.jpg"></div>
+    <div class="product-info"><h3>Кеспе тауық</h3><div class="price" id="price42">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(42, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(42, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bir" style="display:none" data-ingredients="Ет, нан үгіндісі, жұмыртқа, пияз, тұз" onclick="openPopup(43)">
+    <div class="product-image"><img src="images/frikadel.jpg"></div>
+    <div class="product-info"><h3>Фрикадельки</h3><div class="price" id="price43">1 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(43, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(43, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  
+
+<!-- Екінші тағамдар -->
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, ұн, пияз, тұз, қамыр" onclick="openPopup(44)">
+    <div class="product-image"><img src="images/bes.jpeg"></div>
+    <div class="product-info"><h3>Бесбармақ</h3><div class="price" id="price44">2 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(44, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(44, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Қой еті, қияр, баклажан, пияз, аскөк, картоп, май" onclick="openPopup(45)">
+    <div class="product-image"><img src="images/taifirmen.JPG"></div>
+    <div class="product-info"><h3>Тайқазан фирменный</h3><div class="price" id="price45">7 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(45, 800)"><label for="b6a">1 д"ана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(45, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Қой еті, долма, манты, голубцы, қияр, қызанақ, пияз, аскөк, картоп" onclick="openPopup(46)">
+    <div class="product-image"><img src="images/taiassort.JPG"></div>
+    <div class="product-info"><h3>Тайқазан ассорти</h3><div class="price" id="price46">3 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(46, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(46, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Cиыр еті, пияз, май, тұз" onclick="openPopup(47)">
+    <div class="product-image"><img src="images3/taikuyrdak.png"></div>
+    <div class="product-info"><h3>Тай қуырдақ</h3><div class="price" id="price47">3 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(47, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(47, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Қой еті, пияз, май, тұз" onclick="openPopup(48)">
+    <div class="product-image"><img src="images/koikuyrdak.jpg"></div>
+    <div class="product-info"><h3>Қуырдақ қой етімен</h3><div class="price" id="price48">2 900 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(48, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(48, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, пияз, сәбіз, тұз" onclick="openPopup(49)">
+    <div class="product-image"><img src="images/kebab.jpg"></div>
+    <div class="product-info"><h3>Қазан кебаб</h3><div class="price" id="price49">2 900 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(49, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(49, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Күріш, ет, сәбіз, пияз, тұз" onclick="openPopup(50)">
+    <div class="product-image"><img src="images/uzbekpalau.jpg"></div>
+    <div class="product-info"><h3>Палау ташкентский</h3><div class="price" id="price50">1 700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(50, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(50, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, ұн, пияз, тұз" onclick="openPopup(51)">
+    <div class="product-image"><img src="images3/nary.jpg"></div>
+    <div class="product-info"><h3>Нарын</h3><div class="price" id="price51">1 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(51, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(51, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, күріш, пияз, тұз" onclick="openPopup(52)">
+    <div class="product-image"><img src="images/asipsuh.jpg"></div>
+    <div class="product-info"><h3>Әсіп сухой</h3><div class="price" id="price52">1 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(52, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(52, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, картоп, пияз, сәбіз, тұз" onclick="openPopup(53)">
+    <div class="product-image"><img src="images/jark.jpg"></div>
+    <div class="product-info"><h3>Жаркое</h3><div class="price" id="price53">2 200 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(53, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(53, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Ет, картоп, пияз, сәбіз, тұз" onclick="openPopup(54)">
+    <div class="product-image"><img src="images2/dymlama.jpg"></div>
+    <div class="product-info"><h3>Дымлама</h3><div class="price" id="price54">2 200 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(54, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(54, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Сиыр еті, тұз, дәмдеуіштер" onclick="openPopup(55)">
+    <div class="product-image"><img src="images/tusenka.jpg"></div>
+    <div class="product-info"><h3>Тущонка из говядины</h3><div class="price" id="price55">2 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(55, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(55, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Тауық еті, тұз, бұрыш, май" onclick="openPopup(56)">
+    <div class="product-image"><img src="images/tabaka.webp"></div>
+    <div class="product-info"><h3>Табака</h3><div class="price" id="price56">1 950 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(56, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(56, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card eki" style="display:none" data-ingredients="Тауық еті, қызыл соус (қызанақ негізі), пияз, сарымсақ, тұз" onclick="openPopup(57)">
+    <div class="product-image"><img src="images/chorsu.jpg"></div>
+    <div class="product-info"><h3>Чорсу-Ханым</h3><div class="price" id="price57">1 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(57, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(57, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+
+
+
+<!-- Шашлыктар -->
+  <div class="product-card sashlyk" style="display:none" data-ingredients="Ет, тұз, бұрыш" onclick="openPopup(58)">
+    <div class="product-image"><img src="images/kuskovoi.jpg"></div>
+    <div class="product-info"><h3>Кусковой</h3><div class="price" id="price58">900 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="yh" id="yha" checked onchange="updatePrice(58, 900)"><label for="yha">Сиыр еті</label>
+      <input type="radio" name="yh" id="yhb" onchange="updatePrice(58, 1100)"><label for="yhb">Қой еті</label>
+    </div>
+  </div>
+  <div class="product-card sashlyk" style="display:none" data-ingredients="Ет, пияз, тұз" onclick="openPopup(59)">
+    <div class="product-image"><img src="images2/kima.jpg"></div>
+    <div class="product-info"><h3>Қима</h3><div class="price" id="price59">850 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(59, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(59, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card sashlyk" style="display:none" data-ingredients="Тауық қанаты, тұз, бұрыш, сарымсақ" onclick="openPopup(60)">
+    <div class="product-image"><img src="images/krlyshki.jpg"></div>
+    <div class="product-info"><h3>Крылышки</h3><div class="price" id="price60">1 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(60, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(60, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card sashlyk" style="display:none" data-ingredients="Қой қабырға еті, тұз, бұрыш" onclick="openPopup(61)">
+    <div class="product-image"><img src="images2/kabyrga.jpg"></div>
+    <div class="product-info"><h3>Қой қабырға</h3><div class="price" id="price61">2 200 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(61, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(61, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+<!-- Пицца -->
+  <div class="product-card pizza" style="display:none" data-ingredients="Сиыр еті, шұжық, тұз, бұрыш, сарымсақ" onclick="openPopup(62)">
+    <div class="product-image"><img src="images2/pepperoni.png"></div>
+    <div class="product-info"><h3>Пепперони</h3><div class="price" id="price62">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(62, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(62, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Ет, қызанақ, пияз, сарымсақ, тұз" onclick="openPopup(63)">
+    <div class="product-image"><img src="images2/boloneze.jpg"></div>
+    <div class="product-info"><h3>Болоньезе</h3><div class="price" id="price63">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(63, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(63, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Тауық еті, салат жапырағы, пармезан, крутоны, майонез" onclick="openPopup(64)">
+    <div class="product-image"><img src="images/chezar.jpg"></div>
+    <div class="product-info"><h3>Цезарь</h3><div class="price" id="price64">3 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(64, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(64, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Тауық еті, саңырауқұлақ, шұжық, қияр, қызанақ, майонез, тұз" onclick="openPopup(65)">
+    <div class="product-image"><img src="images/4 sezona.jpg"></div>
+    <div class="product-info"><h3>4 Сезона</h3><div class="price" id="price65">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(65, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(65, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Картоп, пияз, шұжық, тұз, бұрыш, сыр" onclick="openPopup(66)">
+    <div class="product-image"><img src="images/4 syra.jpg"></div>
+    <div class="product-info"><h3>4 Сыра</h3><div class="price" id="price66">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(66, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(66, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Қамыр, қызанақ соусы, ірімшік моцарелла, базилик" onclick="openPopup(67)">
+    <div class="product-image"><img src="images/margarita.jpg"></div>
+    <div class="product-info"><h3>Маргарита</h3><div class="price" id="price67">2 500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(67, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(67, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Тауық еті, пияз, майонез, тұз" onclick="openPopup(68)">
+    <div class="product-image"><img src="images2/kurin.jpg"></div>
+    <div class="product-info"><h3>Куриная</h3><div class="price" id="price68">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(68, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(68, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Ет, бұрыш, пияз, қызанақ, бұршақ, тұз" onclick="openPopup(69)">
+    <div class="product-image"><img src="images/meksika.jpg"></div>
+    <div class="product-info"><h3>Мексика</h3><div class="price" id="price69">2 800 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(69, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(69, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card pizza" style="display:none" data-ingredients="Қамыр, қазы, ірімшік, қызанақ соусы" onclick="openPopup(70)">
+    <div class="product-image"><img src="images/kazypizza.avif"></div>
+    <div class="product-info"><h3>Тай Казан</h3><div class="price" id="price70">3 000 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(70, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(70, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+  <!-- Fast Food -->
+  <div class="product-card fast" style="display:none" data-ingredients="Ұн, сиыр еті, тұз" onclick="openPopup(71)">
+    <div class="product-image"><img src="images/lazasgov.jpg"></div>
+    <div class="product-info"><h3>Лаваш Говяжий</h3><div class="price" id="price71">1 300 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bd" id="bda" checked onchange="updatePrice(71, 1300)"><label for="bda">Обычный</label>
+      <input type="radio" name="bd" id="bdb" onchange="updatePrice(71, 1450)"><label for="bdb">С сыром</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Ұн, тауық еті, тұз" onclick="openPopup(72)">
+    <div class="product-image"><img src="images/kurinylavas.jpg"></div>
+    <div class="product-info"><h3>Лаваш Куриный</h3><div class="price" id="price72">1 100 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bс" id="bсa" checked onchange="updatePrice(72, 1100)"><label for="bсa">Обычный</label>
+      <input type="radio" name="bс" id="bсb" onchange="updatePrice(72, 1300)"><label for="bсb">С сыром</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Жүгері, қияр, қызанақ, болгар бұрышы, аскөк, тұз, майонез" onclick="openPopup(73)">
+    <div class="product-image"><img src="images4/assortilavas.JPG"></div>
+    <div class="product-info"><h3>Лаваш ассорти</h3><div class="price" id="price73">1 450 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(73, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(73, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Тауық қанаты, тұз, бұрыш, сарымсақ" onclick="openPopup(74)">
+    <div class="product-image"><img src="images3/krilishki-kfc.jpg"></div>
+    <div class="product-info"><h3>Крылышки</h3><div class="price" id="price74">1 890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bq" id="bqa" checked onchange="updatePrice(74, 1890)"><label for="bqa">8 шт</label>
+      <input type="radio" name="bq" id="bqb" onchange="updatePrice(74, 3490)"><label for="bqb">16 шт</label>
+      <input type="radio" name="bq" id="bqc" onchange="updatePrice(74, 4990)"><label for="bqc">24 шт</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, сиыр еті, тұз, бұрыш" onclick="openPopup(75)">
+    <div class="product-image"><img src="images2/bagetgav.jpg"></div>
+    <div class="product-info"><h3>Багет Говяжий</h3><div class="price" id="price75">1 300 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bt" id="bta" checked onchange="updatePrice(75, 1300)"><label for="bta">Обычный</label>
+      <input type="radio" name="bt" id="btb" onchange="updatePrice(75, 1450)"><label for="btb">С сыром</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, тауық еті, тұз, бұрыш" onclick="openPopup(76)">
+    <div class="product-image"><img src="images/bagetkur.jpg"></div>
+    <div class="product-info"><h3>Багет Куриный</h3><div class="price" id="price76">1 100 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(76, 1100)"><label for="b6a">Обычный</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(76, 1300)"><label for="b6b">С сыром</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Тауық еті, багет нан, қызанақ, салат жапырағы, майонез, тұз" onclick="openPopup(77)">
+    <div class="product-image"><img src="images/boxmaster.webp"></div>
+    <div class="product-info"><h3>БоксМастер</h3><div class="price" id="price77">1 450 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(77, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(77, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Тауық еті, ұн, жұмыртқа, тұз" onclick="openPopup(78)">
+    <div class="product-image"><img src="images/chiken.jpg"></div>
+    <div class="product-info"><h3>Чикен</h3><div class="price" id="price78">1 800 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="be" id="bea" checked onchange="updatePrice(78, 1800)"><label for="bea">0.5п</label>
+      <input type="radio" name="be" id="beb" onchange="updatePrice(78, 3200)"><label for="beb">1п</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Бұрыш, сиыр еті, багет нан, тұз, майонез, салат жапырағы, қызанақ" onclick="openPopup(79)">
+    <div class="product-image"><img src="images/burger.jpg"></div>
+    <div class="product-info"><h3>Бургер</h3><div class="price" id="price79">1 050 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bl" id="bla" checked onchange="updatePrice(79, 1050)"><label for="bla">Куриный</label>
+      <input type="radio" name="bl" id="blb" onchange="updatePrice(79, 1100)"><label for="blb">Говяжий</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, сиыр еті, ірімшік, тұз, бұрыш, майонез, қызанақ, салат" onclick="openPopup(80)">
+    <div class="product-image"><img src="images/chizburger.jpg"></div>
+    <div class="product-info"><h3>ЧизБургер</h3><div class="price" id="price80">1 200 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="br" id="bra" checked onchange="updatePrice(80, 1200)"><label for="bra">Куриный</label>
+      <input type="radio" name="br" id="brb" onchange="updatePrice(80, 1300)"><label for="brb">Говяжий</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, сиыр еті, ірімшік, тұз, бұрыш, майонез, қызанақ, салат" onclick="openPopup(81)">
+    <div class="product-image"><img src="images/bigburger.jpg"></div>
+    <div class="product-info"><h3>БигБургер</h3><div class="price" id="price81">1 690 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="by" id="bya" checked onchange="updatePrice(81, 1690)"><label for="bya">Куриный</label>
+      <input type="radio" name="by" id="byb" onchange="updatePrice(81, 1790)"><label for="byb">Говяжий</label>
+    </div>
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Картоп, тұз, май" onclick="openPopup(82)">
+    <div class="product-image"><img src="images/fri.webp"></div>
+    <div class="product-info"><h3>Фри</h3><div class="price" id="price82">790 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(82, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(82, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, тауық еті, майонез, тұз, салат" onclick="openPopup(83)">
+    <div class="product-image"><img src="images/chiken.jpg"></div>
+    <div class="product-info"><h3>ЧикенБургер</h3><div class="price" id="price83">1 190 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(83, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(83, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Бұрыш, қазы, багет нан, тұз, майонез, салат жапырағы, қызанақ" onclick="openPopup(84)">
+    <div class="product-image"><img src="images/burgkaz.jpg"></div>
+    <div class="product-info"><h3>ТайБургер</h3><div class="price" id="price84">1 490 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(84, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(84, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Багет нан, шұжық, қияр, қызанақ, майонез, қыша, тұз" onclick="openPopup(85)">
+    <div class="product-image"><img src="images4/hod-dog.jpg"></div>
+    <div class="product-info"><h3>Хот-Дог</h3><div class="price" id="price85">790 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="bf" id="bfa" checked onchange="updatePrice(85, 790)"><label for="bfa">Одинарный</label>
+      <input type="radio" name="bf" id="bfb" onchange="updatePrice(85, 990)"><label for="bfb">Двойной</label>
+    </div>
+  </div>
+
+  <h2 class="category-title fast-title" style="display:none;">Сусындар</h2>
+
+  <div class="product-card fast" style="display:none" data-ingredients="Компот" onclick="openPopup(86)">
+    <div class="product-image"><img src="images4/kompot-bakl.jpg"></div>
+    <div class="product-info"><h3>Компот</h3><div class="price" id="price86">400 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(86, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(86, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Айран" onclick="openPopup(87)">
+    <div class="product-image"><img src="images4/airan.jpg"></div>
+    <div class="product-info"><h3>Айран</h3><div class="price" id="price87">350 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(87, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(87, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+  <h2 class="category-title fast-title" style="display:none;">Комбо</h2>
+
+  <div class="product-card fast" style="display:none" data-ingredients="Макси чай лимон, Фри, 3-Бургер" onclick="openPopup(88)">
+    <div class="product-image"><img src="images/komboburger.jpg"></div>
+    <div class="product-info"><h3>Комбо Бургер</h3><div class="price" id="price88">4 490 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(88, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(88, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Макси чай лимон, Фри, 3-Лаваш" onclick="openPopup(89)">
+    <div class="product-image"><img src="images3/kombolavas.jpg"></div>
+    <div class="product-info"><h3>Комбо Лаваш</h3><div class="price" id="price89">3 490 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(89, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(89, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Макси чай лимон, Фри, БоксМастер" onclick="openPopup(90)">
+    <div class="product-image"><img src="images/komboboks.jpg"></div>
+    <div class="product-info"><h3>Комбо Бокс</h3><div class="price" id="price90">2 490 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(90, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(90, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card fast" style="display:none" data-ingredients="Макси чай лимон, 2-Фри, Крылышки-24шт, 2-соус кетчуп" onclick="openPopup(91)">
+    <div class="product-image"><img src="images3/kombokryl.jpg"></div>
+    <div class="product-info"><h3>Комбо Крылышки-24шт</h3><div class="price" id="price91">6 990 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(91, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(91, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+
+<!-- Десерттер -->
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, жұмыртқа, сүт, қант, май" onclick="openPopup(92)">
+    <div class="product-image"><img src="images/pirog.jpg"></div>
+    <div class="product-info"><h3>Пирожные</h3><div class="price" id="price92">600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(92, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(92, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, какао, жұмыртқа, сүт, қант, май, қызыл бояу" onclick="openPopup(93)">
+    <div class="product-image"><img src="images/krasbarhat.jpg"></div>
+    <div class="product-info"><h3>Красный бархат</h3><div class="price" id="price93">600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(93, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(93, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, жұмыртқа, қант, сүт, какао, май, ірімшік," onclick="openPopup(94)">
+    <div class="product-image"><img src="images/bupipai.jpg"></div>
+    <div class="product-info"><h3>Вупи пай</h3><div class="price" id="price94">600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(94, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(94, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, жұмыртқа, қант, сүт, май, шоколад, арахис, карамель, крем" onclick="openPopup(95)">
+    <div class="product-image"><img src="images/snikers.webp"></div>
+    <div class="product-info"><h3>Сникерс</h3><div class="price" id="price95">600 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(95, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(95, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, жұмыртқа, сүт, тұз, қант" onclick="openPopup(96)">
+    <div class="product-image"><img src="images4/bliny.jpg"></div>
+    <div class="product-info"><h3>Блины</h3><div class="price" id="price96">250 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(96, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(96, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ірімшік, жұмыртқа, қант, сүт, ұн" onclick="openPopup(97)">
+    <div class="product-image"><img src="images/tvorog.jpg"></div>
+    <div class="product-info"><h3>Творожный</h3><div class="price" id="price97">450 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(97, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(97, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, жұмыртқа, сүт, бал, қант, май, тұз" onclick="openPopup(98)">
+    <div class="product-image"><img src="images2/medovik.png"></div>
+    <div class="product-info"><h3>Медовик</h3><div class="price" id="price98">450 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(98, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(98, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ірімшік, крем, жеміс, кәмпит, печенье" onclick="openPopup(99)">
+    <div class="product-image"><img src="images2/traifil.jpg"></div>
+    <div class="product-info"><h3>Трайфилл</h3><div class="price" id="price99">500 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(99, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(99, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card desert" style="display:none" data-ingredients="Ұн, ет, пияз, жұмыртқа, тұз, май" onclick="openPopup(100)">
+    <div class="product-image"><img src="images/pirojni.jpg"></div>
+    <div class="product-info"><h3>Запеченый пирожки</h3><div class="price" id="price100">250 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(100, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(100, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+<!-- Лимонадтар -->
+  <div class="product-card limon" style="display:none" data-ingredients="Киви, лайм, су, қант" onclick="openPopup(101)">
+    <div class="product-image"><img src="images/kivilaim.jpg"></div>
+    <div class="product-info"><h3>Киви-Лайм</h3><div class="price" id="price101">890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="op" id="op1" checked onchange="updatePrice(101, 890)"><label for="op1">0.4 литр</label>
+      <input type="radio" name="op" id="op2" onchange="updatePrice(101, 1800)"><label for="op2">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card limon" style="display:none" data-ingredients="Манго, маракуйя, су, қант" onclick="openPopup(102)">
+    <div class="product-image"><img src="images/mango.jpeg"></div>
+    <div class="product-info"><h3>Манго-Маракуйя</h3><div class="price" id="price102">890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="ol" id="ol1" checked onchange="updatePrice(102, 890)"><label for="ol1">0.4 литр</label>
+      <input type="radio" name="ol" id="ol2" onchange="updatePrice(102, 1800)"><label for="ol2">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card limon" style="display:none" data-ingredients="Жаңа жалбыз, лайм, газ суы, қант" onclick="openPopup(103)">
+    <div class="product-image"><img src="images/mohito.jpg"></div>
+    <div class="product-info"><h3>Мохито</h3><div class="price" id="price103">890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="oj" id="oj1" checked onchange="updatePrice(103, 890)"><label for="oj1">0.4 литр</label>
+      <input type="radio" name="oj" id="oj2" onchange="updatePrice(103, 1800)"><label for="oj2">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card limon" style="display:none" data-ingredients="Құлпынай, су, қант" onclick="openPopup(104)">
+    <div class="product-image"><img src="images4/klubnika.jpg"></div>
+    <div class="product-info"><h3>Клубника</h3><div class="price" id="price104">890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="ou" id="ou1" checked onchange="updatePrice(104, 890)"><label for="ou1">0.4 литр</label>
+      <input type="radio" name="ou" id="ou2" onchange="updatePrice(104, 1800)"><label for="ou2">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card limon" style="display:none" data-ingredients="Компот" onclick="openPopup(105)">
+    <div class="product-image"><img src="images/kompot.webp"></div>
+    <div class="product-info"><h3>Компот</h3><div class="price" id="price105">890 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="oq" id="oq1" checked onchange="updatePrice(105, 890)"><label for="oq1">0.4 литр</label>
+      <input type="radio" name="oq" id="oq2" onchange="updatePrice(105, 1800)"><label for="oq2">1 литр</label>
+    </div>
+  </div>
+
+<!-- Напитоктар -->
+  <div class="product-card sok" style="display:none" data-ingredients="Кола" onclick="openPopup(106)">
+    <div class="product-image"><img src="images4/cola.jpg"></div>
+    <div class="product-info"><h3>Кола</h3><div class="price" id="price106">450 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="as" id="asa" checked onchange="updatePrice(106, 450)"><label for="asa">0.5 литр</label>
+      <input type="radio" name="as" id="asb" onchange="updatePrice(106, 650)"><label for="asb">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card sok" style="display:none" data-ingredients="Спрайт" onclick="openPopup(107)">
+    <div class="product-image"><img src="images/sprite.jpg"></div>
+    <div class="product-info"><h3>Спрайт</h3><div class="price" id="price107">450 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="sa" id="saa" checked onchange="updatePrice(107, 450)"><label for="saa">0.5 литр</label>
+      <input type="radio" name="sa" id="sab" onchange="updatePrice(107, 650)"><label for="sab">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card sok" style="display:none" data-ingredients="Фанта" onclick="openPopup(108)">
+    <div class="product-image"><img src="images/fanta.jpg"></div>
+    <div class="product-info"><h3>Фанта</h3><div class="price" id="price108">450 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="fd" id="fda" checked onchange="updatePrice(108, 450)"><label for="fda">0.5 литр</label>
+      <input type="radio" name="fd" id="fdb" onchange="updatePrice(108, 650)"><label for="fdb">1 литр</label>
+    </div>
+  </div>
+  <div class="product-card sok" style="display:none" data-ingredients="Кола" onclick="openPopup(109)">
+    <div class="product-image"><img src="images/colabank.jpg"></div>
+    <div class="product-info"><h3>Кола Банка</h3><div class="price" id="price109">400 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="df" id="dfa" checked onchange="updatePrice(109, 450)"><label for="dfa">0.5 литр</label>
+      <input type="radio" name="df" id="dfb" onchange="updatePrice(109, 650)"><label for="dfb">1 литр</label>
+    </div> -->
+  </div>
+
+   
+       <div class="product-card sok" style="display:none;" data-ingredients="Компот" onclick="openPopup(110)">
+        <div class="product-image"><img src="images4/kompot-bakl.jpg"></div>
+        <div class="product-info"><h3>Компот</h3><div class="price" id="price110">400 ₸</div></div>
+        <!-- <div class="options" onclick="event.stopPropagation();">
+          <input type="radio" name="df" id="dfa" checked onchange="updatePrice(110, 450)"><label for="dfa">0.5 литр</label>
+          <input type="radio" name="df" id="dfb" onchange="updatePrice(110, 650)"><label for="dfb">1 литр</label>
+        </div> -->
+         </div>
+       <div class="product-card sok" style="display:none;" data-ingredients="Айран" onclick="openPopup(111)">
+        <div class="product-image"><img src="images4/airan.jpg"></div>
+        <div class="product-info"><h3>Айран</h3><div class="price" id="price111">350 ₸</div></div>
+        <!-- <div class="options" onclick="event.stopPropagation();">
+          <input type="radio" name="df" id="dfa" checked onchange="updatePrice(111, 450)"><label for="dfa">0.5 литр</label>
+          <input type="radio" name="df" id="dfb" onchange="updatePrice(111, 650)"><label for="dfb">1 литр</label>
+        </div> -->
+         </div>
+       <div class="product-card sok" style="display:none" data-ingredients="Мохито" onclick="openPopup(112)">
+        <div class="product-image"><img src="images/moxito.jpg"></div>
+        <div class="product-info"><h3>Мохито</h3><div class="price" id="price112">450 ₸</div></div>
+        <!-- <div class="options" onclick="event.stopPropagation();">
+          <input type="radio" name="df" id="dfa" checked onchange="updatePrice(112, 450)"><label for="dfa">0.5 литр</label>
+          <input type="radio" name="df" id="dfb" onchange="updatePrice(112, 650)"><label for="dfb">1 литр</label>
+        </div> -->
+         </div>
+
+
+<!-- Бар -->
+  <div class="product-card bar" style="display:none" data-ingredients="Қара шәй жапырағы" onclick="openPopup(113)">
+    <div class="product-image"><img src="images/sai.jpg"></div>
+    <div class="product-info"><h3>Шәй</h3><div class="price" id="price113">250 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b5" id="b5a" checked onchange="updatePrice(113, 300)"><label for="b5a">1 шт</label>
+      <input type="radio" name="b5" id="b5b" onchange="updatePrice(113, 1400)"><label for="b5b">5 шт</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Қара шәй қапшығы" onclick="openPopup(114)">
+    <div class="product-image"><img src="images4/sai2:1.jpg"></div>
+    <div class="product-info"><h3>Шәй 2в1</h3><div class="price" id="price114">350 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(114, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(114, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Қара шәй жапырағы, лимон" onclick="openPopup(115)">
+    <div class="product-image"><img src="images/taskentsai.jpg"></div>
+    <div class="product-info"><h3>Шәй Ташкентский</h3><div class="price" id="price115">500 ₸</div>
+</div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(115, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(115, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Кофе 3в1 қапшығы" onclick="openPopup(116)">
+    <div class="product-image"><img src="images4/kofe3:1.jpg"></div>
+    <div class="product-info"><h3>Кофе 3в1</h3><div class="price" id="price116">250 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(116, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(116, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Жаңа жалбыз, қара шай жапырағы, қант" onclick="openPopup(117)">
+    <div class="product-image"><img src="images4/marokkosai.jpg"></div>
+    <div class="product-info"><h3>Шәй Марокко</h3><div class="price" id="price117">850 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(117, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(117, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Қара шай жапырағы, сүт" onclick="openPopup(118)">
+    <div class="product-image"><img src="images4/sutpensai.jpg"></div>
+    <div class="product-info"><h3>Шәй Сүтпен</h3><div class="price" id="price118">700 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(118, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(118, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+  <div class="product-card bar" style="display:none" data-ingredients="Қара шәй жапырағы, қант" onclick="openPopup(119)">
+    <div class="product-image"><img src="images/bokalsai.jpg"></div>
+    <div class="product-info"><h3>Шәй Бокал</h3><div class="price" id="price119">200 ₸</div></div>
+    <!-- <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="b6" id="b6a" checked onchange="updatePrice(119, 800)"><label for="b6a">1 дана</label>
+      <input type="radio" name="b6" id="b6b" onchange="updatePrice(119, 3000)"><label for="b6b">5 дана</label>
+    </div> -->
+  </div>
+
+
+
+<!-- Қазақ сусындары -->
+  <div class="product-card kazak" style="display:none" data-ingredients="Сиыр сүті, ашытқы" onclick="openPopup(120)">
+    <div class="product-image"><img src="images/kymyz.jpg"></div>
+    <div class="product-info"><h3>Қымыз</h3><div class="price" id="price120">400 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="f1" id="f1a" checked onchange="updatePrice(120, 400)"><label for="f1a">Кесе</label>
+      <input type="radio" name="f1" id="f1b" onchange="updatePrice(120, 1300)"><label for="f1b">1 литр</label>
+    </div>
+  </div>
+
+  <div class="product-card kazak" style="display:none" data-ingredients="айран, сүт, тұз, су." onclick="openPopup(121)">
+    <div class="product-image"><img src="images4/kymyran.webp"></div>
+    <div class="product-info"><h3>Қымыран</h3><div class="price" id="price121">400 ₸</div></div>
+    <div class="options" onclick="event.stopPropagation();">
+      <input type="radio" name="f2" id="f2a" checked onchange="updatePrice(121, 400)"><label for="f2a">Кесе</label>
+      <input type="radio" name="f2" id="f2b" onchange="updatePrice(121, 1500)"><label for="f2b">1 литр</label>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-top">
+    <div class="footer-logo">
+      <img src="images/logo.jpeg" alt="Kausar">
+      <h2>TaiQazan</h2>
+    </div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/taiqazan.shayhana?igsh=d2J6ZGxldWgyMWU1" target="_blank"><img src="images4/instagram-brands-solid-full.svg" alt="Instagram"></a>
+      <a href="https://www.tiktok.com/@taiqazan.shayhana?_t=ZM-8yjoOOSBJ5S&_r=1" target="_blank"><img src="images4/tiktok-brands-solid-full.svg" alt="TikTok"></a>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="footer-bottom">
+    <p class="lora">©2025 TaiQazan шайхана желісі</p>
+    <div class="developer">
+      <span class="alice" style="font-size: 1.2em;">Сайтты жасаған:</span>
+      <a href="https://wa.me/77750726045?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1%D0%B5!%20%D0%9C%D0%B5%D0%BD%20%D0%A2%D0%B0%D0%B9%D2%9A%D0%B0%D0%B7%D0%B0%D0%BD%20%D1%81%D0%B0%D0%B9%D1%82%D1%8B%D0%BD%D0%B0%D0%BD%20%D3%A9%D1%82%D1%82%D1%96%D0%BC!%20" target="_blank"><img src="images/me.jpg" alt="NAQTY.KZ"></a>
+    </div>
+  </div>
+</footer>
+
+
+<!-- Сол жақтағы "Жоғары" батырмасы -->
+
+<button class="floating-btn left" id="scrollTopBtn">↑</button>
+
+<!-- Оң жақтағы WhatsApp батырмасы -->
+
+<a href="https://wa.me/77066305050?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1
+%D0%B5!%20%D0%9C%D0%B5%D0%BD%20%D1%82%D0%B0%D0%BF%D1%81%D1%8B%D1%80%D1%8B%D1%81%20%D0%B1
+%D0%B5%D1%80%D0%B5%D0%B9%D1%96%D0%BD%20%D0%B4%D0%B5%D0%B3%D0%B5%D0%BD%20%D0%B5%D0%B4%D1%96%D0%BC%3F" class="floating-btn right" id="orderBtn" style="padding: 0px;" target="_blank">
+  <span style="margin-left: 10px; z-index: 10;" class="lora">Тапсырыс беру</span>
+  <img src="images/whats.jpg" alt="WhatsApp">
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <div class="top-bar"><button class="back-btn" onclick="closePopup()">← Артқа</button></div>
+    <div class="popup-body">
+      <img id="popupImg" src="" alt="">
+      <div class="popup-details">
+        <h2 id="popupTitle"></h2>
+        <p class="popup-price" id="popupPrice"></p>
+        <p id="popupDesc"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+function showCategory(category, element) {
+  // Барлық карточкаларды жасыру
+  document.querySelectorAll('.product-card').forEach(card => {
+    card.style.display = card.classList.contains(category) ? 'block' : 'none';
+  });
+
+  // Актив классты жаңарту
+  document.querySelectorAll('.scroll-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  element.classList.add('active');
+
+  // Тақырып ауыстыру
+  document.querySelectorAll('.category-title').forEach(title => {
+    title.style.display = title.classList.contains(category + '-title') ? 'block' : 'none';
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+<script>
+
+
+
+function updatePrice(id, price) {
+  document.getElementById("price"+id).textContent = price.toLocaleString()+" ₸";
+}
+function openPopup(id) {
+  const card = document.querySelector(`.product-card:nth-of-type(${id})`);
+  document.getElementById("popupImg").src = card.querySelector("img").src;
+  document.getElementById("popupTitle").textContent = card.querySelector("h3").textContent;
+  document.getElementById("popupPrice").textContent = card.querySelector(".price").textContent;
+  document.getElementById("popupDesc").textContent = "Құрамы: " + card.dataset.ingredients;
+  document.getElementById("popup").style.display = "flex";
+}
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+}
+function filterCategory(cat, elem) {
+  document.querySelectorAll(".scroll-item").forEach(i=>i.classList.remove("active"));
+  elem.classList.add("active");
+  document.querySelectorAll(".product-card").forEach(c=>{
+    c.style.display = c.classList.contains(cat) ? "block":"none";
+  });
+}
+
+
+
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+
+<script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+
+
+<script>
+const scrollTopBtn = document.getElementById('scrollTopBtn');
+const orderBtn = document.getElementById('orderBtn');
+const header = document.querySelector('header');
+
+window.addEventListener('scroll', () => {
+  const headerBottom = header.offsetHeight;
+  if (window.scrollY > headerBottom) {
+    scrollTopBtn.classList.add('show');
+    orderBtn.classList.add('show');
+  } else {
+    scrollTopBtn.classList.remove('show');
+    orderBtn.classList.remove('show');
+  }
+});
+
+scrollTopBtn.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+
+
+</body>
+</html>
